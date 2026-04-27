@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>10</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>890</x>
-      <y>40</y>
-      <w>500</w>
-      <h>150</h>
+      <x>889</x>
+      <y>448</y>
+      <w>350</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>GraphLoader
 --
+
 --
 _+loadFromFile(String, String) : IGraph_
 
@@ -22,26 +23,10 @@ _+loadEdgesFromFile(IGraph, HashMap&lt;Integer, INode&gt;, String) : void_</pane
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>540</x>
-      <y>90</y>
-      <w>270</w>
-      <h>80</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;interface&gt;&gt;
-Algorithm
---
---
-+apply(IGraph, Map&lt;String, Object&gt;) : T
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>110</x>
-      <y>200</y>
-      <w>310</w>
-      <h>400</h>
+      <x>679</x>
+      <y>70</y>
+      <w>217</w>
+      <h>280</h>
     </coordinates>
     <panel_attributes>Color
 --
@@ -71,10 +56,10 @@ _+ interpolate(Color, Color, int, int) : Color_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>550</x>
-      <y>250</y>
-      <w>210</w>
-      <h>440</h>
+      <x>910</x>
+      <y>70</y>
+      <w>147</w>
+      <h>273</h>
     </coordinates>
     <panel_attributes>Coord
 --
@@ -105,31 +90,130 @@ _+mult(Coord, double) : Coord_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>170</x>
-      <y>110</y>
-      <w>210</w>
+      <x>686</x>
+      <y>364</y>
+      <w>189</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>Main
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IEdge
 --
---
-+main(String[]) : void</panel_attributes>
++source() : INode
++target() : INode
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>970</x>
-      <y>370</y>
-      <w>270</w>
-      <h>80</h>
+      <x>378</x>
+      <y>70</y>
+      <w>259</w>
+      <h>735</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
-IEdge
+IGraph
 --
++createGraph()  : IGraph
++copy() : IGraph
+
++addNode() : INode
++addNode(INode) : INode
++addEdge(INode, Inode) : IEdge
+
++delNode(INode) : void
++delEdge(IEdge) : void
+
++numberOfNodes(): int
++numberOfEdges(): int
+
++getNeighbors(INode) : ArrayList&lt;INode&gt;
++getSuccesors(INode) : ArrayList&lt;INode&gt;
++getPredecessors(INode) : ArrayList&lt;INode&gt;
++getInOutEdges(INode) : ArrayList&lt;IEdge&gt;
++getInEdges(INode) : ArrayList&lt;IEdge&gt;
++getOutEdges(INode) : ArrayList&lt;IEdge&gt;
++getNodes() : ArrayList&lt;INode&gt;
++getEdges() : ArrayList&lt;IEdges&gt;
+
++source(IEdge) : INode
++target(IEdge) : INode
++inDegree(INode) : int
++outDegree(INode) : int
++degree(INode) : int
+
++existEdge(INode, INode, boolean) : boolean
++getSizes() : SizeProperty
++getNodeSize(INode) : Size
++getEdgeWidth(IEdge) : Double
+
++setNodeSize(INode, Size) : void
++setEdgeWidth(IEdge, Double)  : void
++setAllNodesSizes(Size) : void
++setAllEdgesWidths(double) : void
+
++getLayout() : LayoutProperty
++getNodePosition(INode) : Coord
++getEdgePoition(IEdge) : ArrayList&lt;Coord&gt;
+
++setNodePosition(INode, Coord) : void
++setEdgePosition(IEdge, ArrayList&lt;Coord&gt;) : void
++setAllNodesPositions(Coord) : void
++setAllEdgesPositions(ArrayList&lt;Coord&gt;) : void
+
++getBoundingBox() : ArrayList&lt;Coord&gt;
++getColor() : ColorProperty
++getNodeColor(INode) : Color
++geEdgeColor(IEdge) : Color
+
++setNodeColor(INode, Color) : void
++setEdgeColor(IEdhe, Color) : void
++setAllNodesColors(Color) : void
++setAllEdgesColors(Color) : void
+
++welshAndPowell() : void
++sixColors() : void
++fiveColors() : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>889</x>
+      <y>364</y>
+      <w>189</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+INode
 --
-+source() : INode
 </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>686</x>
+      <y>448</y>
+      <w>189</w>
+      <h>308</h>
+    </coordinates>
+    <panel_attributes>Size
+--
++w : double
++h : double
+--
++Size()
++Size(double, double)
++Size(Size)
+
++getH() : double
++getW() : double
+
++setW(int w) : void
++setH(int h) : void
+
++toString() : String</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
