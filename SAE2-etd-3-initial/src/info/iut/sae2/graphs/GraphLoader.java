@@ -86,6 +86,40 @@ public class GraphLoader {
      * @param nodeMap the map associating nodes ids in the file and nodes in the graph
      * @param edgeFileName path to the file containing edges informations
      */
-    private static void loadEdgesFromFile(IGraph g, HashMap<Integer, INode> nodeMap, String edgeFileName) {
+    private static void loadEdgesFromFile(IGraph g, HashMap<Integer, INode> nodeMap, 
+                                          String edgeFileName) {
+        
+        Path pathToEdgeFile = Paths.get(edgeFileName);
+        
+        try (BufferedReader br = Files.newBufferedReader(pathToEdgeFile,
+                StandardCharsets.US_ASCII)) {
+            
+            String line = br.readLine();
+            while (line != null) {
+                String[] attributes = line.split(";");
+                if (attributes.length != 2) {
+                    System.err.println("Error while loading nodes : " +
+                            attributes.length + " column(s)");
+                    continue;
+                }
+                
+                // Retrieve the 2 ids of nodes
+                int idNode1 = Integer.parseInt(attributes[0]);
+                int idNode2 = Integer.parseInt(attributes[1]);
+                
+                // Retrieve nodes from nodeMap
+                INode n1 = nodeMap.get(idNode1);
+                INode n2 = nodeMap.get(idNode2);
+                
+                // Add edge in graph
+                g.addEdge(n1, n2);
+                
+                // Move on to the next line
+                line = br.readLine();
+            }   
+            
+        }catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
     }
 }
