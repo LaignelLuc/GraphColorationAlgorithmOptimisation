@@ -4,8 +4,20 @@
  */
 package info.iut.sae2.graphs;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author rbourqui
  */
-public interface INode {}
+public interface INode {
+    Color getColor();
+    void setColor(Color c);
+    Coord getCoord();
+    void setCoord(Coord c);
+    Size getSize();
+    void setSize(Size s);
+    ArrayList<INode> getNeighbors();
+    ArrayList<INode> getSuccessors();
+    ArrayList<INode> getPredecessors();
+}
