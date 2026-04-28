@@ -4,6 +4,8 @@
  */
 package info.iut.sae2.graphs;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author rbourqui
@@ -22,4 +24,17 @@ public interface IEdge {
      * @return the target of the edge
      */
     public INode target();
+    
+    public Color getColor();
+    
+    public Double getWidth();
+    
+    public void setColor(Color c);
+    
+    public void setWidth(Double width);
+    
+    public ArrayList<Coord> getCoord();
+    
+    public void setCoord(ArrayList<Coord> bends);
+    
 }
