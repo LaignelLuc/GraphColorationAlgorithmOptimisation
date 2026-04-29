@@ -25,16 +25,4 @@ public interface IEdge {
      */
     public INode target();
     
-    public Color getColor();
-    
-    public Double getWidth();
-    
-    public void setColor(Color c);
-    
-    public void setWidth(Double width);
-    
-    public ArrayList<Coord> getCoord();
-    
-    public void setCoord(ArrayList<Coord> bends);
-    
 }
