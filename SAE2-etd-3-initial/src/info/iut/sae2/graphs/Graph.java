@@ -29,9 +29,9 @@ public class Graph implements IGraph {
     
     private SizeProperty sizes;
     
-    private ArrayList<Coord> boundingBox;
-    
     private ColorProperty colors;
+    
+    private LayoutProperty layout;
 
     /**
      * Constructor for graph class.
@@ -40,8 +40,8 @@ public class Graph implements IGraph {
         edges = new ArrayList<>();
         nodes = new ArrayList<>();
         sizes = new SizeProperty();
-        boundingBox = new ArrayList<>();
         colors = new ColorProperty();
+        layout = new LayoutProperty();
     }
 
     /**
@@ -125,6 +125,9 @@ public class Graph implements IGraph {
     @Override
     public void delNode(INode n) {
         nodes.remove(n);
+        colors.delNode(n);
+        layout.delNode(n);
+        sizes.delNode(n);
     }
 
     /**
@@ -135,6 +138,9 @@ public class Graph implements IGraph {
     @Override
     public void delEdge(IEdge e) {
         edges.remove(e);
+        colors.delEdge(e);
+        layout.delEdge(e);
+        sizes.delEdge(e);
     }
 
     /**
@@ -411,7 +417,8 @@ public class Graph implements IGraph {
      */
     @Override
     public Size getNodeSize(INode n) {
-        return n.getSize();
+        Size s = sizes.getNodeValue(n);
+        return s != null ? s : SizeProperty.DEFAULT_NODE_SIZE;
     }
 
     /**
@@ -422,7 +429,8 @@ public class Graph implements IGraph {
      */
     @Override
     public Double getEdgeWidth(IEdge e) {
-        return e.getWidth();
+        Double d = sizes.getEdgeValue(e);
+        return d != null ? d : SizeProperty.DEFAULT_EDGE_WIDTH;
     }
 
     /**
@@ -433,7 +441,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setNodeSize(INode n, Size s) {
-        n.setSize(s);
+        sizes.setNodeValue(n, s);
     }
 
     /**
@@ -444,7 +452,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setEdgeWidth(IEdge e, Double width) {
-        e.setWidth(width);
+        sizes.setEdgeValue(e, width);
     }
 
     /**
@@ -454,9 +462,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesSizes(Size s) {
-        for(INode node : nodes){
-            node.setSize(s);
-        }
+        sizes.setAllNodesValues(s);
     }
 
     /**
@@ -466,9 +472,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesWidths(Double width) {
-        for(IEdge edge : edges){
-            edge.setWidth(width);
-        }
+        sizes.setAllEdgesValues(width);
     }
 
     /**
@@ -478,7 +482,7 @@ public class Graph implements IGraph {
      */
     @Override
     public LayoutProperty getLayout() {
-        return null;
+        return layout;
     }
 
     /**
@@ -489,7 +493,8 @@ public class Graph implements IGraph {
      */
     @Override
     public Coord getNodePosition(INode n) {
-        return n.getCoord();
+        Coord coord =  layout.getNodeValue(n);
+        return coord != null ? coord : LayoutProperty.DEFAULT_NODE_POS;
     }
 
     /**
@@ -501,7 +506,8 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<Coord> getEdgePosition(IEdge e) {
-        return e.getCoord();
+        ArrayList<Coord> edgeCoord = layout.getEdgeValue(e);
+        return edgeCoord != null ? edgeCoord : LayoutProperty.DEFAULT_EDGE_POS;
     }
 
     /**
@@ -512,7 +518,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setNodePosition(INode n, Coord c) {
-        n.setCoord(c);
+        layout.setNodeValue(n, c);
     }
 
     /**
@@ -524,7 +530,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setEdgePosition(IEdge e, ArrayList<Coord> bends) {
-        e.setCoord(bends);
+        layout.setEdgeValue(e, bends);
     }
 
     /**
@@ -534,9 +540,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesPositions(Coord c) {
-        for(INode node : nodes){
-            node.setCoord(c);
-        }
+        layout.setAllNodesValues(c);
     }
 
     /**
@@ -547,9 +551,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesPositions(ArrayList<Coord> bends) {
-        for(IEdge edge : edges){
-            edge.setCoord(bends);
-        }
+        layout.setAllEdgesValues(bends);
     }
 
     /**
@@ -565,6 +567,36 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<Coord> getBoundingBox() {
+        ArrayList<Coord> boundingBox = new ArrayList<>();
+        Coord topLeft = new Coord();
+        Coord bottomRight = new Coord();
+        for(INode node : nodes){
+            Coord nodeCoord = layout.getNodeValue(node);
+            Size nodeSize = sizes.getNodeValue(node);
+            System.out.println(SizeProperty.DEFAULT_NODE_SIZE);
+            System.out.println(nodeSize);
+            Double leftBorderGap = nodeCoord.x-nodeSize.getW()/2;
+            Double topBorderGap = nodeCoord.y-nodeSize.getH()/2;
+            Double rightBorderGap = nodeCoord.x+nodeSize.getW()/2;
+            Double bottomBorderGap = nodeCoord.y+nodeSize.getH()/2;
+            if (leftBorderGap < topLeft.x){
+                topLeft.x = leftBorderGap;
+            }
+            if (topBorderGap < topLeft.y){
+                topLeft.y = topBorderGap;
+            }
+            if (rightBorderGap > bottomRight.x){
+                bottomRight.x = rightBorderGap;
+            }
+            if (bottomBorderGap > bottomRight.y){
+                bottomRight.y = bottomBorderGap;
+            }            
+        }
+        
+        // Get border values
+        boundingBox.add(topLeft);
+        boundingBox.add(bottomRight);
+        
         return boundingBox;
     }
 
@@ -586,7 +618,8 @@ public class Graph implements IGraph {
      */
     @Override
     public Color getNodeColor(INode n) {
-        return n.getColor();
+        Color c = colors.getNodeValue(n);
+        return c != null ? c : ColorProperty.DEFAULT_NODE_COL;
     }
 
     /**
@@ -597,7 +630,8 @@ public class Graph implements IGraph {
      */
     @Override
     public Color getEdgeColor(IEdge e) {
-        return e.getColor();
+        Color c = colors.getEdgeValue(e);
+        return c != null ? c : ColorProperty.DEFAULT_EDGE_COL;
     }
 
     /**
@@ -608,7 +642,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setNodeColor(INode n, Color c) {
-        n.setColor(c);        
+        colors.setNodeValue(n, c);        
     }
 
     /**
@@ -619,7 +653,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setEdgeColor(IEdge e, Color c) {
-        e.setColor(c);
+        colors.setEdgeValue(e, c);
     }
 
     /**
@@ -629,9 +663,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesColors(Color c) {
-        for(INode node : nodes){
-            node.setColor(c);
-        }
+        colors.setAllNodesValues(c);
     }
 
     /**
@@ -641,9 +673,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesColors(Color c) {
-        for(IEdge edge : edges){
-            edge.setColor(c);
-        }
+        colors.setAllEdgesValues(c);
     }
 
     /**
