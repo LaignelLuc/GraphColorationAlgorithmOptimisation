@@ -31,7 +31,7 @@ public class GraphLoader {
         }
         IGraph g = new Graph();
         HashMap<Integer, INode> nodeMap = loadNodesFromFile(g, nodeFileName);
-
+  
         if (edgeFileName != null) {
             loadEdgesFromFile(g, nodeMap, edgeFileName);
         }

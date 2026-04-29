@@ -462,7 +462,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesSizes(Size s) {
-        sizes.setAllNodesValues(s);
+        for(INode node : nodes){
+            sizes.setNodeValue(node, s);
+        }
     }
 
     /**
@@ -472,7 +474,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesWidths(Double width) {
-        sizes.setAllEdgesValues(width);
+        for (IEdge e : edges){
+            sizes.setEdgeValue(e, width);
+        }
     }
 
     /**
@@ -540,7 +544,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesPositions(Coord c) {
-        layout.setAllNodesValues(c);
+        for (INode node : nodes){
+            layout.setNodeValue(node, c);
+        }
     }
 
     /**
@@ -551,7 +557,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesPositions(ArrayList<Coord> bends) {
-        layout.setAllEdgesValues(bends);
+        for (IEdge e : edges){
+            layout.setEdgeValue(e, bends);
+        }
     }
 
     /**
@@ -571,10 +579,8 @@ public class Graph implements IGraph {
         Coord topLeft = new Coord();
         Coord bottomRight = new Coord();
         for(INode node : nodes){
-            Coord nodeCoord = layout.getNodeValue(node);
-            Size nodeSize = sizes.getNodeValue(node);
-            System.out.println(SizeProperty.DEFAULT_NODE_SIZE);
-            System.out.println(nodeSize);
+            Coord nodeCoord = getNodePosition(node);
+            Size nodeSize = getNodeSize(node);
             Double leftBorderGap = nodeCoord.x-nodeSize.getW()/2;
             Double topBorderGap = nodeCoord.y-nodeSize.getH()/2;
             Double rightBorderGap = nodeCoord.x+nodeSize.getW()/2;
@@ -663,7 +669,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllNodesColors(Color c) {
-        colors.setAllNodesValues(c);
+        for (INode node : nodes){
+            colors.setNodeValue(node, c);
+        }
     }
 
     /**
@@ -673,7 +681,9 @@ public class Graph implements IGraph {
      */
     @Override
     public void setAllEdgesColors(Color c) {
-        colors.setAllEdgesValues(c);
+        for (IEdge e : edges){
+            colors.setEdgeValue(e, c);
+        }
     }
 
     /**
