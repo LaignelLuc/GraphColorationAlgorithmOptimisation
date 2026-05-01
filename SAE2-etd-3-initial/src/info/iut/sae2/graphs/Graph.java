@@ -172,10 +172,13 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<INode> getNeighbors(INode n) {
-        if (n.getNeighbors().isEmpty()) {
+        int index = nodes.indexOf(n);
+        Node p = (Node) nodes.get(index);
+        System.out.println("Neighbors numbers :"+p.getNeighbors());
+        if (p.getNeighbors().isEmpty()) {
             return new ArrayList<>();
         } else {
-            return n.getNeighbors();
+            return p.getNeighbors();
         }
     }
 
