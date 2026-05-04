@@ -172,13 +172,30 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<INode> getNeighbors(INode n) {
-        int index = nodes.indexOf(n);
-        Node p = (Node) nodes.get(index);
-        System.out.println("Neighbors numbers :"+p.getNeighbors());
-        if (p.getNeighbors().isEmpty()) {
+        // The neighbors of a node come from the in-going
+        // and out-going of the node.
+        ArrayList<IEdge> inOutEdges = getInOutEdges(n);
+        
+        if (inOutEdges.isEmpty()) {
             return new ArrayList<>();
         } else {
-            return p.getNeighbors();
+            ArrayList<INode> neighbors = new ArrayList<>();
+            // We look from inOutEgdes and look if the node n is
+            // present in source or target. Then we take the other
+            // end of the e
+            for (IEdge e : inOutEdges){
+                if (n.equals(e.source())){
+                    // n is in the source, we take the target
+                    INode node = e.target();
+                    neighbors.add(node);
+                }
+                else {
+                    // n is in the target, we take the source
+                    INode node = e.source();
+                    neighbors.add(node);
+                }
+            }
+            return neighbors;
         }
     }
 
@@ -190,10 +207,20 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<INode> getSuccesors(INode n) {
-        if (n.getSuccessors().isEmpty()) {
+        // The succesors of a node come from the out-going of
+        // the node.
+        ArrayList<IEdge> outEdges = getOutEdges(n);
+        
+        if (outEdges.isEmpty()) {
             return new ArrayList<>();
         } else {
-            return n.getSuccessors();
+            ArrayList<INode> succesors = new ArrayList<>();
+            // We look from outEgdes and get all targets
+            for (IEdge e : outEdges){
+                INode node = e.target();
+                succesors.add(node);
+            }
+            return succesors;
         }
     }
 
@@ -205,10 +232,20 @@ public class Graph implements IGraph {
      */
     @Override
     public ArrayList<INode> getPredecessors(INode n) {
-        if (n.getPredecessors().isEmpty()) {
+        // The predecessors of a node come from the in-going of
+        // the node.
+        ArrayList<IEdge> inEdges = getInEdges(n);
+        
+        if (inEdges.isEmpty()) {
             return new ArrayList<>();
         } else {
-            return n.getPredecessors();
+            ArrayList<INode> predecessors = new ArrayList<>();
+            // We look from inEgdes and get all sources
+            for (IEdge e : inEdges){
+                INode node = e.source();
+                predecessors.add(node);
+            }
+            return predecessors;
         }
     }
 

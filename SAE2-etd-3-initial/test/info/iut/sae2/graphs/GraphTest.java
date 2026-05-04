@@ -126,9 +126,9 @@ public class GraphTest {
         Assert.assertEquals(1, g.numberOfEdges());
     }
     
-    // Test some functions about the neighbors of a node
+    // Test some functions about the edges of a node
     @Test
-    public void testGetNodeEnvironment(){
+    public void testGetNodeEdges(){
         // New graph
         String nodeFileName = "dataset/simple_nodes.csv";
         String edgeFileName = "dataset/simple_edges.csv";
@@ -152,6 +152,137 @@ public class GraphTest {
         Assert.assertEquals(2, inEdges.size());
         Assert.assertEquals(1, outEdges.size());
         Assert.assertEquals(3, inOutEdges.size());
-        // To be continued...
+    }
+    
+    // Test some functions about the nodes from an edge
+    @Test
+    public void testGetNodesfromEdge(){
+        // New graph
+        String nodeFileName = "dataset/simple_nodes.csv";
+        String edgeFileName = "dataset/simple_edges.csv";
+        
+        IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
+        
+        // edge 0
+        IEdge e0 = g.getEdges().get(0);
+        // e0 has node 0 on source and node 3 on target
+        INode n0 = g.getNodes().get(0);
+        INode n3 = g.getNodes().get(3);
+        Assert.assertEquals(n0, e0.source());
+        Assert.assertFalse(n0.equals(e0.target()));
+        Assert.assertEquals(n3, e0.target());
+        Assert.assertFalse(n3.equals(e0.source()));
+        
+        // edge 10
+        IEdge e10 = g.getEdges().get(10);
+        // e10 has node 4 on source and node 9 on target
+        INode n4 = g.getNodes().get(4);
+        INode n9 = g.getNodes().get(9);
+        Assert.assertEquals(n4, e10.source());
+        Assert.assertFalse(n0.equals(e10.source()));
+        Assert.assertFalse(n3.equals(e10.source()));
+        Assert.assertFalse(n9.equals(e10.source()));
+        Assert.assertEquals(n9, e10.target());
+        Assert.assertFalse(n0.equals(e10.target()));
+        Assert.assertFalse(n3.equals(e10.target()));
+        Assert.assertFalse(n4.equals(e10.target()));
+        
+    }
+    
+    // Test some functions about the neighbors of a node
+    @Test
+    public void testGetNodeNeighbors(){
+        // New graph
+        String nodeFileName = "dataset/simple_nodes.csv";
+        String edgeFileName = "dataset/simple_edges.csv";
+        
+        IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
+        
+        // node 0
+        INode n0 = g.getNodes().get(0);
+        // n0 has 2 successors : n3 and n6
+        ArrayList<INode> sucessorsN0 = g.getSuccesors(n0);
+        Assert.assertEquals(2, sucessorsN0.size());
+        // n3 and n6
+        INode n3 = g.getNodes().get(3);
+        Assert.assertEquals(n3, sucessorsN0.get(0));
+        Assert.assertFalse(n3.equals(sucessorsN0.get(1)));
+        INode n6 = g.getNodes().get(6);
+        Assert.assertEquals(n6, sucessorsN0.get(1));
+        Assert.assertFalse(n6.equals(sucessorsN0.get(0)));
+        
+        // node 11
+        INode n11 = g.getNodes().get(11);
+        // n11 has 3 predecessors : n1, n2 and n8
+        ArrayList<INode> predecessorsN11 = g.getPredecessors(n11);
+        Assert.assertEquals(3, predecessorsN11.size());
+        // n1, n2 and n8
+        INode n1 = g.getNodes().get(1);
+        Assert.assertEquals(n1, predecessorsN11.get(0));
+        Assert.assertFalse(n1.equals(predecessorsN11.get(1)));
+        Assert.assertFalse(n1.equals(predecessorsN11.get(2)));
+        INode n2 = g.getNodes().get(2);
+        Assert.assertEquals(n2, predecessorsN11.get(1));
+        Assert.assertFalse(n2.equals(predecessorsN11.get(0)));
+        Assert.assertFalse(n2.equals(predecessorsN11.get(2)));
+        INode n8 = g.getNodes().get(8);
+        Assert.assertEquals(n8, predecessorsN11.get(2));
+        Assert.assertFalse(n8.equals(predecessorsN11.get(0)));
+        Assert.assertFalse(n8.equals(predecessorsN11.get(1)));
+        
+        // node 5
+        INode n5 = g.getNodes().get(5);
+        // n5 has 4 neighors : 2 predecessors (n1 and n3) 
+        // and 2 succesors (n6 and n8)
+        ArrayList<INode> neighborsN5 = g.getNeighbors(n5);
+        Assert.assertEquals(4,neighborsN5.size());
+        // n1
+        Assert.assertEquals(n1, neighborsN5.get(0));
+        Assert.assertFalse(n1.equals(neighborsN5.get(1)));
+        Assert.assertFalse(n1.equals(neighborsN5.get(2)));
+        Assert.assertFalse(n1.equals(neighborsN5.get(3)));
+        // n3
+        Assert.assertEquals(n3, neighborsN5.get(1));
+        Assert.assertFalse(n3.equals(neighborsN5.get(0)));
+        Assert.assertFalse(n3.equals(neighborsN5.get(2)));
+        Assert.assertFalse(n3.equals(neighborsN5.get(3)));
+        // n6
+        Assert.assertEquals(n6, neighborsN5.get(2));
+        Assert.assertFalse(n6.equals(neighborsN5.get(0)));
+        Assert.assertFalse(n6.equals(neighborsN5.get(1)));
+        Assert.assertFalse(n6.equals(neighborsN5.get(3)));
+        // n8
+        Assert.assertEquals(n8, neighborsN5.get(3));
+        Assert.assertFalse(n8.equals(neighborsN5.get(0)));
+        Assert.assertFalse(n8.equals(neighborsN5.get(1)));
+        Assert.assertFalse(n8.equals(neighborsN5.get(2)));
+    }
+    
+    // Test some functions to get degrees of a node
+    @Test
+    public void testGetAllDegreeNode(){
+        // New graph
+        String nodeFileName = "dataset/simple_nodes.csv";
+        String edgeFileName = "dataset/simple_edges.csv";
+        
+        IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
+        
+        // node 0
+        INode n0 = g.getNodes().get(0);
+        // n0 has 2 succesors, so an outdegree of 2
+        int outDegreeN0 = g.outDegree(n0);
+        Assert.assertEquals(2, outDegreeN0);
+        
+        // node 11
+        INode n11 = g.getNodes().get(11);
+        // n11 has 3 predecessors, so an indegree of 3
+        int inDegreeN11 = g.inDegree(n11);
+        Assert.assertEquals(3, inDegreeN11);
+        
+        // node 5
+        INode n5 = g.getNodes().get(5);
+        // n5 has 4 neighbors, so a degree of 4
+        int degreeN5 = g.degree(n5);
+        Assert.assertEquals(4, degreeN5);
     }
 }
