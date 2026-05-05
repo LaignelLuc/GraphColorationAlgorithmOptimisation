@@ -4,6 +4,7 @@
  */
 package info.iut.sae2.graphs;
 
+import info.iut.sae2.algorithm.SixColoration;
 import info.iut.sae2.properties.ColorProperty;
 import info.iut.sae2.properties.LayoutProperty;
 import info.iut.sae2.properties.SizeProperty;
@@ -128,6 +129,9 @@ public class Graph implements IGraph {
         colors.delNode(n);
         layout.delNode(n);
         sizes.delNode(n);
+        for(IEdge edge : this.getInOutEdges(n)){
+            delEdge(edge);
+        }
     }
 
     /**
@@ -738,6 +742,8 @@ public class Graph implements IGraph {
      */
     @Override
     public void sixColors() {
+//        SixColoration sixColorAlgo = new SixColoration();
+//        sixColorAlgo.apply(this, );
     }
 
     /**
