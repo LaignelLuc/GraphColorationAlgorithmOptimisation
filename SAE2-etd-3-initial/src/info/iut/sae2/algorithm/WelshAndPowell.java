@@ -48,7 +48,11 @@ public class WelshAndPowell extends ColorAlgorithm{
         //AlgoSorting.getDecreasingOrder(g, newOrder);  
         
         // Merge Sort
-        AlgoSorting.mergeSort(g, newOrder);
+        //AlgoSorting.mergeSort(g, newOrder);
+        
+        // Java Sort
+        AlgoSorting.getDecreasingOrderJavaSort(g, newOrder);
+        
         return newOrder;
     }
       

@@ -141,6 +141,15 @@ public class AlgoSorting implements Algorithm {
     public static void mergeSort(IGraph g, ArrayList<INode> nodes) {
        mergeSortPartial(g, nodes, 0, nodes.size() - 1);
     }   
+        
     
-    // Other java sort to be looked and method to be created later
+    // Java Sort Collection
+    public static void getDecreasingOrderJavaSort(IGraph g, 
+                                                  ArrayList<INode> nodes) {
+
+        nodes.sort((n1, n2) ->
+                   Integer.compare(g.degree(n2), g.degree(n1))
+                    );
+    }
+    
 }
