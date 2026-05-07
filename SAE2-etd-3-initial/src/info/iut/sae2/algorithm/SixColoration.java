@@ -4,7 +4,6 @@ import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -14,6 +13,7 @@ import java.util.Map;
  */
 public class SixColoration extends ColorAlgorithm {
     
+    private double hue = 0.0;
     
     public SixColoration(){
         
@@ -27,36 +27,32 @@ public class SixColoration extends ColorAlgorithm {
      */
     @Override
     public ColorProperty apply(IGraph g, Map<String, Object> parameters){
-        ColorProperty res = new ColorProperty();
-        IGraph copy = g.copy(); 
-        ArrayList<INode> delOrder = new ArrayList<>(); //Order in which the nodes are deleted
+        ArrayList<INode> order = buildNodeColorationOrder(g);
+        return firstFit(order, g);
+    }
         
-        while(!copy.getNodes().isEmpty()){  //while the graph is not empty
-            
+        @Override
+        protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
+        IGraph copy = g.copy();
+        ArrayList<INode> delOrder = new ArrayList<>();
+
+        while (!copy.getNodes().isEmpty()) {
             int cpt = 0;
-            boolean loop = true;
-            
-            while(cpt < copy.getNodes().size() && loop){  //check every node
-                INode node = copy.getNodes().get(cpt); //the target node in the loop
-                int degreeOfNode = copy.getNeighbors(node).size();
-                if(degreeOfNode <= 5){  //the first node we get with a degree below 5
+            boolean found = false;
+            while (cpt < copy.getNodes().size() && !found) {
+                INode node = copy.getNodes().get(cpt);
+                if (copy.getNeighbors(node).size() <= 5) {
                     delOrder.add(node);
-                    copy.delNode(node); //remove the node
-                    loop=false;
-                }else{
+                    copy.delNode(node);
+                    found = true;
+                } else {
                     cpt++;
                 }
-            } 
+            }
         }
-        
-        Color currentColor = new Color();
-        Map<Color,Integer> colorHierarchy;
-        
-        for(int i = delOrder.size()-1 ; i>=0; i--){
-            if
-        }
+        java.util.Collections.reverse(delOrder);
+        return delOrder;
     }
-    
     
     
 }

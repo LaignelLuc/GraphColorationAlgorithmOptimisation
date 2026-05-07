@@ -9,6 +9,7 @@ import info.iut.sae2.properties.ColorProperty;
 import info.iut.sae2.properties.LayoutProperty;
 import info.iut.sae2.properties.SizeProperty;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,7 +65,13 @@ public class Graph implements IGraph {
      */
     @Override
     public IGraph copy() {
-        Graph copy = this;
+        Graph copy = new Graph();
+        for (INode n : this.nodes){
+            copy.addNode(n);
+        }
+        for (IEdge e : this.edges){
+            copy.addEdge(e);
+        }
         return copy;
     }
 
@@ -742,8 +749,11 @@ public class Graph implements IGraph {
      */
     @Override
     public void sixColors() {
-//        SixColoration sixColorAlgo = new SixColoration();
-//        sixColorAlgo.apply(this, );
+        SixColoration sixColorAlgo = new SixColoration();
+        ColorProperty colorsToApply = sixColorAlgo.apply(this, new HashMap<>());
+        for (INode node : nodes) {
+            colors.setNodeValue(node, colorsToApply.getNodeValue(node));
+        }
     }
 
     /**
