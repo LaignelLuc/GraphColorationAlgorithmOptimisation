@@ -6,6 +6,7 @@ package info.iut.sae2.algorithm;
 
 import info.iut.sae2.graphs.GraphLoader;
 import info.iut.sae2.graphs.IGraph;
+import info.iut.sae2.graphs.INode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.Assert;
@@ -26,11 +27,13 @@ public class WelshAndPowellTest {
         
         IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
         
-        ArrayList newMap = WelshAndPowell.getOrder(g);
+        ArrayList<INode> newMap = WelshAndPowell.getOrder(g);
         
         //System.out.println(newMap.size());
         Assert.assertEquals(g.numberOfNodes(), newMap.size());
         System.out.println(newMap);
+        ArrayList<Integer> map = WelshAndPowell.getDegree(g, newMap);
+        System.out.println(map);
     }
     
     @Test

@@ -52,7 +52,5 @@ public class SixColoration extends ColorAlgorithm {
         }
         java.util.Collections.reverse(delOrder);
         return delOrder;
-    }
-    
-    
+    }    
 }
