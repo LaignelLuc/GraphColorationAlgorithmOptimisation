@@ -5,6 +5,7 @@
 package info.iut.sae2.graphs;
 
 import info.iut.sae2.algorithm.SixColoration;
+import info.iut.sae2.algorithm.WelshAndPowell;
 import info.iut.sae2.properties.ColorProperty;
 import info.iut.sae2.properties.LayoutProperty;
 import info.iut.sae2.properties.SizeProperty;
@@ -742,6 +743,11 @@ public class Graph implements IGraph {
      */
     @Override
     public void welshAndPowell() {
+        WelshAndPowell WPColorAlgo = new WelshAndPowell();
+        ColorProperty colorsToApply = WPColorAlgo.apply(this, new HashMap<>());
+        for (INode node : nodes) {
+            colors.setNodeValue(node, colorsToApply.getNodeValue(node));
+        }
     }
 
     /**
