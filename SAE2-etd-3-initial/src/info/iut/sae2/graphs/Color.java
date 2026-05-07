@@ -132,4 +132,18 @@ public class Color {
     public String toString(){
         return "("+ r + ", " + g + ", " + b + ", " + a + ")";
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Color)) return false;
+        Color other = (Color) obj;
+        return this.r == other.r && this.g == other.g 
+            && this.b == other.b && this.a == other.a;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * r + 31 * g + 31 * b + 31 * a;
+    }
 }
