@@ -26,12 +26,13 @@ public class WelshAndPowell extends ColorAlgorithm{
      */
     @Override
     public ColorProperty apply(IGraph g, Map<String, Object> parameters){
-        return null;
+        ArrayList<INode> order = buildNodeColorationOrder(g);
+        return firstFit(order, g);
     }
     
     // Method for rearrange nodes from highest degree to lowest degree
-    public static ArrayList<INode> getOrder(IGraph g){
-        
+    @Override
+    protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         // First we get the degrees for all node
         HashMap <INode, Integer> degreesNodes = getDegree(g);
         
@@ -43,10 +44,14 @@ public class WelshAndPowell extends ColorAlgorithm{
         //System.out.println(newOrder);
         
         // Then we change order
-        AlgoSorting.getDecreasingOrder(g, newOrder);  
+        // Selection Sort
+        //AlgoSorting.getDecreasingOrder(g, newOrder);  
+        
+        // Merge Sort
+        AlgoSorting.mergeSort(g, newOrder);
         return newOrder;
     }
-    
+      
     // Method to get degrees for all nodes
     public static HashMap<INode, Integer> getDegree(IGraph g){
         
@@ -69,5 +74,5 @@ public class WelshAndPowell extends ColorAlgorithm{
             newOrder.add(degree);
         }
         return newOrder;
-    }
+    } 
 }

@@ -1,5 +1,4 @@
 package info.iut.sae2.algorithm;
-import info.iut.sae2.graphs.Color;
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
@@ -31,8 +30,8 @@ public class SixColoration extends ColorAlgorithm {
         return firstFit(order, g);
     }
         
-        @Override
-        protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
+    @Override
+    protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         IGraph copy = g.copy();
         ArrayList<INode> delOrder = new ArrayList<>();
 

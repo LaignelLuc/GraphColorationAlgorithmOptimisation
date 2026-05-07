@@ -27,7 +27,9 @@ public class WelshAndPowellTest {
         
         IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
         
-        ArrayList<INode> newMap = WelshAndPowell.getOrder(g);
+        WelshAndPowell wb = new WelshAndPowell();
+        
+        ArrayList<INode> newMap = wb.buildNodeColorationOrder(g);
         
         //System.out.println(newMap.size());
         Assert.assertEquals(g.numberOfNodes(), newMap.size());

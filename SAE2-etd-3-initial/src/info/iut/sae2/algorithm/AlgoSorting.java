@@ -51,87 +51,96 @@ public class AlgoSorting implements Algorithm {
         
     }
     
-    // Merge sort algorithm (from Cycle 5)
+    // Merge sort algorithm (from s1 Cycle 5)
     
     /**
-     * Tri fusion, restreint sur un intervalle.
+     * Merge sort, restricted to an interval.
      *
-     * @param tab tableau à trier
-     * @param debut indice du début de l'intervalle
-     * @param fin indice de la fin de l'intervalle
-     * @return le nombre d'opérations durant ce tri
+     * @param g
+     * @param nodes
+     * @param first
+     * @param last
      */
-    static long triFusionPartiel(int[] tab, int debut, int fin) {
-        long nbOperations = 1; // coût du test fin > debut
-        if (fin > debut) {
-            int milieu = (debut + fin) / 2;
-            nbOperations += triFusionPartiel(tab, debut, milieu);
-            nbOperations += triFusionPartiel(tab, milieu + 1, fin);
-            nbOperations += fusion(tab, debut, milieu, fin);
+    public static void mergeSortPartial(IGraph g, ArrayList<INode> nodes, 
+                                        int first, int last) {
+
+        if (last > first) {
+            int milieu = (first + last) / 2;
+
+            mergeSortPartial(g, nodes, first, milieu);
+            mergeSortPartial(g, nodes, milieu + 1, last);
+            fusion(g, nodes, first, milieu, last);
         }
-        return nbOperations;
     }
 
     /**
-     * Action de fusion de deux intervalles triés.
+     * Merging action of two sorted intervals.
      *
-     * @param tab tableau à trier
-     * @param debut indice de début
-     * @param milieu indice séparant les deux parties (fin du premier
-     * intervalle)
-     * @param fin indice de fin
-     * @return le nombre d'opérations durant ce tri
+     * @param g
+     * @param nodes
+     * @param first
+     * @param middle
+     * @param last
      */
-    static long fusion(int[] tab, int debut, int milieu, int fin) {
-        long nbOperations = 0;
-        int tmp[] = new int[tab.length];
-        int posGauche = debut;
-        int posDroite = milieu + 1;
-        int posTmp = debut;
-        // on compare jusqu'à la fin d'un des deux intervalles
-        while (posGauche <= milieu && posDroite <= fin) {
-            nbOperations += 3; // 2 comparaisons ci-dessus et une ci-dessous
-            if (tab[posGauche] < tab[posDroite]) {
-                tmp[posTmp] = tab[posGauche];
+    public static void fusion(IGraph g, ArrayList<INode> nodes,
+                          int first, int middle, int last) {
+
+        ArrayList<INode> tmp = new ArrayList<>(nodes);
+
+        int posGauche = first;
+        int posDroite = middle + 1;
+        int posTmp = first;
+
+        // Merging of 2 sorted parts
+        while (posGauche <= middle && posDroite <= last) {
+
+            // Decreasing order
+            if (g.degree(nodes.get(posGauche)) >=
+                g.degree(nodes.get(posDroite))) {
+
+                tmp.set(posTmp, nodes.get(posGauche));
                 posGauche++;
-                nbOperations++; // échange ci-dessus
-            } else {
-                tmp[posTmp] = tab[posDroite];
+
+            } 
+            else {
+
+                tmp.set(posTmp, nodes.get(posDroite));
                 posDroite++;
-                nbOperations++; // échange ci-dessus
             }
+
             posTmp++;
         }
-        // on vide le premier intervalle
-        while (posGauche <= milieu) {
-            nbOperations += 2; // comparaison ci-dessus + échange ci-dessous
-            tmp[posTmp] = tab[posGauche];
+
+        // Left part to add
+        while (posGauche <= middle) {
+            tmp.set(posTmp, nodes.get(posGauche));
             posGauche++;
             posTmp++;
         }
-        // on vide le second intervalle
-        while (posDroite <= fin) {
-            nbOperations += 2; // comparaison ci-dessus + échange ci-dessous
-            tmp[posTmp] = tab[posDroite];
+
+        // Right part to add
+        while (posDroite <= last) {
+            tmp.set(posTmp, nodes.get(posDroite));
             posDroite++;
             posTmp++;
         }
-        // on recopie tmp dans tab
-        for (int i = debut; i <= fin; i++) {
-            nbOperations++;
-            tab[i] = tmp[i];
-        }
-        return nbOperations;
-    }
 
-    /**
-     * Tri fusion.
-     *
-     * @param tab tableau à trier
-     * @return le nombre d'opérations durant ce tri
-     */
-    static long triFusion(int[] tab) {
-        return triFusionPartiel(tab, 0, tab.length - 1);
+        // Recopy in nodes
+        for (int i = first; i <= last; i++) {
+            nodes.set(i, tmp.get(i));
+        }
     }
     
+
+    /**
+     * Merge Sort.
+     *
+     * @param g
+     * @param nodes
+     */
+    public static void mergeSort(IGraph g, ArrayList<INode> nodes) {
+       mergeSortPartial(g, nodes, 0, nodes.size() - 1);
+    }   
+    
+    // Other java sort to be looked and method to be created later
 }
