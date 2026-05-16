@@ -4,10 +4,6 @@
  */
 package info.iut.sae2.graphs;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -187,15 +183,27 @@ public class ColorTest {
     @Test
     public void testInterpolate() {
         System.out.println("interpolate");
-        Color start = null;
-        Color end = null;
-        int step = 0;
-        int nbSteps = 0;
-        Color expResult = null;
+        Color start = new Color(255,0,0,255); // Red Color
+        Color end = new Color(0,0,255,255); // Blue Color
+        int step = 5;
+        int nbSteps = 10;
+        Color expResult = new Color(128,0,127,255); // Purple Color
+        // The step give the Color interpolated between the colors start
+        // and end.
         Color result = Color.interpolate(start, end, step, nbSteps);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        // Change step to 10
+        step = 10;
+        result = Color.interpolate(start, end, step, nbSteps);
+        // result is end Color
+        assertEquals(end, result);
+        
+        // Change step to 0
+        step = 0;
+        result = Color.interpolate(start, end, step, nbSteps);
+        // result is start Color
+        assertEquals(start, result);
     }
 
     
@@ -205,13 +213,14 @@ public class ColorTest {
     @Test
     public void testEquals() {
         System.out.println("equals");
-        Object obj = null;
-        Color instance = new Color();
-        boolean expResult = false;
-        boolean result = instance.equals(obj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // Test if 2 colors are the same
+        Color c1 = new Color(255,0,0,255); // Red Color
+        Color c2 = new Color(0,0,255,255); // Blue Color
+        Color c3 = new Color(c2); // Blue Color
+        Color c4 = new Color(255,0,0,255); // Red Color
+        assertFalse(c2.equals(c1));
+        assertTrue(c3.equals(c2));
+        assertTrue(c4.equals(c1));
     }
 
     /**
@@ -224,8 +233,18 @@ public class ColorTest {
         int expResult = 0;
         int result = instance.hashCode();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        // Red Color
+        Color c1 = new Color(255,0,0,255);
+        expResult = 15810; // 255x31+255x31
+        result = c1.hashCode();
+        assertEquals(expResult, result);
+        
+        // White Color
+        Color c2 = new Color(255,255,255,255);
+        expResult = 31620; // 255x31*4
+        result = c2.hashCode();
+        assertEquals(expResult, result);
     }
     
 }
