@@ -30,6 +30,11 @@ public class WelshAndPowell extends ColorAlgorithm{
         return firstFit(order, g);
     }
     
+    public ColorProperty applyToExistingColorProperty(IGraph g, ColorProperty p){
+        ArrayList<INode> order = buildNodeColorationOrder(g);
+        return firstFit(order, g, p);
+    }
+    
     // Method for rearrange nodes from highest degree to lowest degree
     @Override
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
