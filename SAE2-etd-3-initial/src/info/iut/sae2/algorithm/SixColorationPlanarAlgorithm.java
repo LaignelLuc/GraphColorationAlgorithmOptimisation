@@ -10,11 +10,11 @@ import java.util.Map;
  *
  * @author llaignel
  */
-public class SixColoration extends ColorAlgorithm {
+public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
     
     private double hue = 0.0;
     
-    public SixColoration(){
+    public SixColorationPlanarAlgorithm(){
         
     }
     

@@ -4,7 +4,8 @@
  */
 package info.iut.sae2.graphs;
 
-import info.iut.sae2.algorithm.SixColoration;
+import info.iut.sae2.algorithm.FiveColorationPlanarAlgorithm;
+import info.iut.sae2.algorithm.SixColorationPlanarAlgorithm;
 import info.iut.sae2.algorithm.WelshAndPowell;
 import info.iut.sae2.properties.ColorProperty;
 import info.iut.sae2.properties.LayoutProperty;
@@ -755,7 +756,7 @@ public class Graph implements IGraph {
      */
     @Override
     public void sixColors() {
-        SixColoration sixColorAlgo = new SixColoration();
+        SixColorationPlanarAlgorithm sixColorAlgo = new SixColorationPlanarAlgorithm();
         ColorProperty colorsToApply = sixColorAlgo.apply(this, new HashMap<>());
         for (INode node : nodes) {
             colors.setNodeValue(node, colorsToApply.getNodeValue(node));
@@ -767,5 +768,10 @@ public class Graph implements IGraph {
      */
     @Override
     public void fiveColors() {
+        FiveColorationPlanarAlgorithm fiveColorAlgo = new FiveColorationPlanarAlgorithm();
+        ColorProperty colorsToApply = fiveColorAlgo.apply(this, new HashMap<>());
+        for (INode node : nodes) {
+            colors.setNodeValue(node, colorsToApply.getNodeValue(node));
+        }
     }
 }

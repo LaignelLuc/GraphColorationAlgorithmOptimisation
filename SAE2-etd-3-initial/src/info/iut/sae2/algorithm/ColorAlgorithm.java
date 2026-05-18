@@ -118,6 +118,36 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty>{
         return res;
     }
     
+    /**
+     * firstFit Overload to modify an existing ColorProperty.
+     * @param nodeOrder nodeOrder
+     * @param g graph 
+     * @param p color property
+     * @return modified color property.
+     */
+    public ColorProperty firstFit(ArrayList<INode> nodeOrder, IGraph g, ColorProperty p) {
+        ArrayList<Color> colorUsed = new ArrayList<>();
+        double hue = 0.0;
+
+        Color firstColor = hsvToColor((float)hue, 1.0f, 1.0f, 255);
+        colorUsed.add(firstColor);
+        p.setNodeValue(nodeOrder.get(0), firstColor);
+
+        for (int i = 1; i < nodeOrder.size(); i++) {
+            INode currentNode = nodeOrder.get(i);
+            Color minimalColor = getMinimalColor(colorUsed, g, currentNode, p);
+            if (minimalColor == null) {
+                hue = (hue + GOLDEN_RATIO) % 1.0;
+                Color newColor = nextColor(hue);
+                colorUsed.add(newColor);
+                p.setNodeValue(currentNode, newColor);
+            } else {
+                p.setNodeValue(currentNode, minimalColor);
+            }
+        }
+        return p;
+    }
+    
     protected abstract ArrayList<INode> buildNodeColorationOrder(IGraph g);
     
 }
