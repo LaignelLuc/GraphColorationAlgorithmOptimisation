@@ -1,35 +1,45 @@
 package info.iut.sae2.algorithm;
+
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
 import java.util.ArrayList;
 import java.util.Map;
 
-
 /**
+ * SixColoration Algorithm class.
  *
  * @author llaignel
  */
 public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
-    
-    private double hue = 0.0;
-    
-    public SixColorationPlanarAlgorithm(){
-        
+
+    /**
+     * Empty constructor.
+     */
+    public SixColorationPlanarAlgorithm() {
+
     }
-    
-     /**
+
+    /**
      * Compute the result of the Six Coloration algorithm and returns it.
+     *
      * @param g the graph on which the algorithm is applied
-     * @param parameters map of parameters associating parameters names to parameters values
+     * @param parameters map of parameters associating parameters names to
+     * parameters values
      * @return the result of the algorithm
      */
     @Override
-    public ColorProperty apply(IGraph g, Map<String, Object> parameters){
+    public ColorProperty apply(IGraph g, Map<String, Object> parameters) {
         ArrayList<INode> order = buildNodeColorationOrder(g);
         return firstFit(order, g);
     }
-        
+
+    /**
+     * Creates the coloration order for the SixColorationAlgorithm.
+     *
+     * @param g the treated graph
+     * @return the coloration order for the nodes
+     */
     @Override
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         IGraph copy = g.copy();
@@ -51,5 +61,5 @@ public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
         }
         java.util.Collections.reverse(delOrder);
         return delOrder;
-    }    
+    }
 }

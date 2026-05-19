@@ -3,43 +3,50 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package info.iut.sae2.algorithm;
+
 import info.iut.sae2.graphs.Color;
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
  *
  * @author llaignel
  */
-abstract class ColorAlgorithm implements Algorithm<ColorProperty>{
-    
+abstract class ColorAlgorithm implements Algorithm<ColorProperty> {
+
     /**
      * Compute the result of the algorithm and returns it.
+     *
      * @param g the graph on which the algorithm is applied
-     * @param parameters map of parameters associating parameters names to parameters values
+     * @param parameters map of parameters associating parameters names to
+     * parameters values
      * @return the result of the algorithm
      */
     @Override
     public abstract ColorProperty apply(IGraph g, Map<String, Object> parameters);
-    
-    public static final double GOLDEN_RATIO = 0.618033988749895; //0.618 to stay in the HSV wheel values
+
+    protected static final double GOLDEN_RATIO = 0.618033988749895; //0.618 to stay in the HSV wheel values
+    protected double hue = 0.0; // starting hue value (red)
+    protected ArrayList<Color> colorUsed = new ArrayList<>(); // the list of color used in the graph
+    protected ColorProperty p = new ColorProperty(); // the color property that is gonna be applied to the graph
 
     /**
      * Returns the next distinct color using golden ratio hue stepping.
      *
      * @param saturation
-     * @param value    
-     * @param alpha     
+     * @param value
+     * @param alpha
      */
     public static Color nextColor(float saturation, float value, int alpha, double hue) {
-        return hsvToColor((float)hue, saturation, value, alpha);
+        return hsvToColor((float) hue, saturation, value, alpha);
     }
 
     /**
-     * Overload of nextColor with default values. 
+     * Overload of nextColor with default values.
      */
     public static Color nextColor(double hue) {
         return nextColor(0.75f, 0.95f, 255, hue);
@@ -57,85 +64,95 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty>{
 
         float r, g, b;
         switch (sectorIndex % 6) {
-            case 0 -> { r = value; g = t; b = p; }
-            case 1 -> { r = q; g = value; b = p; }
-            case 2 -> { r = p; g = value; b = t; }
-            case 3 -> { r = p; g = q; b = value; }
-            case 4 -> { r = t; g = p; b = value; }
-            default -> { r = value; g = p; b = q; }
+            case 0 -> {
+                r = value;
+                g = t;
+                b = p;
+            }
+            case 1 -> {
+                r = q;
+                g = value;
+                b = p;
+            }
+            case 2 -> {
+                r = p;
+                g = value;
+                b = t;
+            }
+            case 3 -> {
+                r = p;
+                g = q;
+                b = value;
+            }
+            case 4 -> {
+                r = t;
+                g = p;
+                b = value;
+            }
+            default -> {
+                r = value;
+                g = p;
+                b = q;
+            }
         }
 
         return new Color(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255), alpha);
     }
-    
-    public static Color getMinimalColor(ArrayList<Color> colorUsed, IGraph treatedGraph, INode treatedNode, ColorProperty colorProperty){
-        boolean[] isColorUsedByNeighbour = new boolean[colorUsed.size()];
-            
-        for(INode neighbour : treatedGraph.getNeighbors(treatedNode)){
-            if(colorUsed.contains(colorProperty.getNodeValue(neighbour))){
-                isColorUsedByNeighbour[colorUsed.indexOf(colorProperty.getNodeValue(neighbour))] = true;
-            }
-        }
-        
-        boolean usableColorFound = false;
-        int cpt = 0;
-        while(!usableColorFound && cpt < isColorUsedByNeighbour.length){
-            if(!isColorUsedByNeighbour[cpt]){
-                usableColorFound = true;
-            }else{
-                cpt++;
-            }
-        }
-        
-        if(usableColorFound){
-            return colorUsed.get(cpt);
-        }else{
-            return null;
-        }
-    }
-    
-    public ColorProperty firstFit(ArrayList<INode> nodeOrder, IGraph g) {
-        ColorProperty res = new ColorProperty();
-        ArrayList<Color> colorUsed = new ArrayList<>();
-        double hue = 0.0;
 
-        Color firstColor = hsvToColor((float)hue, 1.0f, 1.0f, 255);
-        colorUsed.add(firstColor);
-        res.setNodeValue(nodeOrder.get(0), firstColor);
-
-        for (int i = 1; i < nodeOrder.size(); i++) {
-            INode currentNode = nodeOrder.get(i);
-            Color minimalColor = getMinimalColor(colorUsed, g, currentNode, res);
-            if (minimalColor == null) {
-                hue = (hue + GOLDEN_RATIO) % 1.0;
-                Color newColor = nextColor(hue);
-                colorUsed.add(newColor);
-                res.setNodeValue(currentNode, newColor);
-            } else {
-                res.setNodeValue(currentNode, minimalColor);
-            }
-        }
-        return res;
-    }
-    
     /**
-     * firstFit Overload to modify an existing ColorProperty.
-     * @param nodeOrder nodeOrder
-     * @param g graph 
-     * @param p color property
-     * @return modified color property.
+     * Returns the minimal color possible for a give Node.
+     *
+     * @param colorUsed array of all the color used in the graph
+     * @param treatedGraph the treated graph
+     * @param treatedNode the treated node
+     * @param colorProperty the color property used for the graph
+     * @return the minimal color for the node or null if not found
      */
-    public ColorProperty firstFit(ArrayList<INode> nodeOrder, IGraph g, ColorProperty p) {
-        ArrayList<Color> colorUsed = new ArrayList<>();
-        double hue = 0.0;
+    public static Color getMinimalColor(ArrayList<Color> colorUsed, IGraph treatedGraph, INode treatedNode, ColorProperty colorProperty) {
+        //HashSet that contains the color used by the neighbors
+        HashSet<Color> isColorUsedByNeighbour = new HashSet<>();
+        for (INode neighbour : treatedGraph.getNeighbors(treatedNode)) {
+            isColorUsedByNeighbour.add(colorProperty.getNodeValue(neighbour));
+        }
 
-        Color firstColor = hsvToColor((float)hue, 1.0f, 1.0f, 255);
+        Color foundColor = null;
+        boolean colorFound = false;
+        int i = 0;
+        //We take the first color that is not in the HashSet
+        while (!colorFound && i < colorUsed.size()) {
+            Color currentColor = colorUsed.get(i);
+
+            if (!isColorUsedByNeighbour.contains(currentColor)) {
+                foundColor = currentColor;
+                colorFound = true;
+            }
+
+            i++;
+        }
+
+        return foundColor;
+    }
+
+    /**
+     * First fit algorithm used for WelshAndPowell and 6-coloration algorithm.
+     *
+     * @param nodeOrder order in which the nodes are colored
+     * @param g the graph
+     * @return the updated Color Property
+     */
+    public ColorProperty firstFit(ArrayList<INode> nodeOrder, IGraph g) {
+
+        this.colorUsed = new ArrayList<>();
+        this.hue = 0.0;
+        this.p = p;
+
+        Color firstColor = hsvToColor((float) hue, 1.0f, 1.0f, 255);
         colorUsed.add(firstColor);
         p.setNodeValue(nodeOrder.get(0), firstColor);
 
         for (int i = 1; i < nodeOrder.size(); i++) {
             INode currentNode = nodeOrder.get(i);
-            Color minimalColor = getMinimalColor(colorUsed, g, currentNode, p);
+            Color minimalColor = getMinimalColor(colorUsed, g, currentNode, this.p);
             if (minimalColor == null) {
                 hue = (hue + GOLDEN_RATIO) % 1.0;
                 Color newColor = nextColor(hue);
@@ -147,7 +164,58 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty>{
         }
         return p;
     }
-    
+
+    /**
+     * firstFit Overload to modify an existing ColorProperty.
+     *
+     * @param nodeOrder nodeOrder
+     * @param g graph
+     * @param p color property
+     * @return modified color property.
+     */
+    public ColorProperty firstFit(ArrayList<INode> nodeOrder, IGraph g, ColorProperty p) {
+        this.colorUsed = new ArrayList<>();
+        this.hue = 0.0;
+        this.p = new ColorProperty();
+
+        //We put the base color for the first node in the color property
+        Color firstColor = hsvToColor((float) hue, 1.0f, 1.0f, 255);
+        colorUsed.add(firstColor);
+        this.p.setNodeValue(nodeOrder.get(0), firstColor);
+
+        //for all the other nodes of the node order, we assign the lowest color
+        for (int i = 1; i < nodeOrder.size(); i++) {
+            INode currentNode = nodeOrder.get(i);
+            assignMinimalColor(currentNode, g);
+        }
+        return this.p;
+    }
+
+    /**
+     * Assigns the minimal color possible to a node, and creates a new color if
+     * needed.
+     *
+     * @param node the treated node
+     * @param g the graph used
+     */
+    public void assignMinimalColor(INode node, IGraph g) {
+        Color minimalCol = getMinimalColor(colorUsed, g, node, p);
+        if (minimalCol == null) {
+            hue = (hue + GOLDEN_RATIO) % 1.0;
+            Color newColor = nextColor(hue);
+            colorUsed.add(newColor);
+            p.setNodeValue(node, newColor);
+        } else {
+            p.setNodeValue(node, minimalCol);
+        }
+    }
+
+    /**
+     * Builds the order in which the nodes are colored.
+     *
+     * @param g the graph
+     * @return an ArrayList containing the order.
+     */
     protected abstract ArrayList<INode> buildNodeColorationOrder(IGraph g);
-    
+
 }

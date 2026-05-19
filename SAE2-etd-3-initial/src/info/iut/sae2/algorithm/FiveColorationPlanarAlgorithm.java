@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package info.iut.sae2.algorithm;
 
 import info.iut.sae2.graphs.Color;
@@ -9,119 +5,131 @@ import info.iut.sae2.graphs.IEdge;
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
 /**
+ * FiveColoration Algorithm class.
  *
  * @author llaignel
  */
-public class FiveColorationPlanarAlgorithm extends ColorAlgorithm{
-    
-    private double hue = 0.0;
-    private ArrayList<Color> colorUsed = new ArrayList<>();
-    
+public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
+
     /**
-     * Compute the result of the Six Coloration algorithm and returns it.
-     * @param g the graph on which the algorithm is applied 
-     * @param parameters map of parameters associating parameters names to parameters values
-     * @return the result of the algorithm
+     * HashSet of deleted nodes to reduce complexity.
+     */
+    private HashSet<INode> maskedNodes = new HashSet<>();
+
+    /**
+     * Copy of the treated graph in order to not modify the original graph.
+     */
+    private IGraph copy;
+
+    /**
+     * Calls the five coloration algorithm and returns the resulting color
+     * property.
+     *
+     * @param g the treated graph
+     * @param parameters map of parameters associating parameters names to
+     * parameters values
+     * @return result of the FiveColoration algorithm
      */
     @Override
-    public ColorProperty apply(IGraph g, Map<String, Object> parameters){
+    public ColorProperty apply(IGraph g, Map<String, Object> parameters) {
         hue = 0.0;
         colorUsed = new ArrayList<>();
-        IGraph copy = g.copy();
-        ColorProperty p = new ColorProperty();
-        colorUsed.add(hsvToColor((float)hue,1.0f, 1.0f, 255));
-        return fiveColoration(copy, p, getFirstNodeToTreat(g));
+        copy = g.copy();
+        p = new ColorProperty();
+        maskedNodes = new HashSet<>();
+        colorUsed.add(hsvToColor((float) hue, 1.0f, 1.0f, 255));
+        fiveColoration(getFirstNodeToTreat(copy), g);
+        return p;
     }
-    
-    private ColorProperty fiveColoration(IGraph copy, ColorProperty p, INode nodeToTreat) {
+
+    /**
+     * Computes the result of the five coloration algorithm for a given graph.
+     *
+     * @param nodeToTreat
+     * @param ogGraph
+     */
+    private void fiveColoration(INode nodeToTreat, IGraph ogGraph) {
+
         if (copy.getNodes().size() <= 5) {
             WelshAndPowell WPColorAlgo = new WelshAndPowell();
-            return WPColorAlgo.applyToExistingColorProperty(copy, p);
+            p = WPColorAlgo.applyToExistingColorProperty(copy, p);
+            return;
         }
 
-        int nodeToTreatOrder = copy.getNeighbors(nodeToTreat).size();
-        Color colToApply;
+        ArrayList<INode> nodesOfDegreeFour = new ArrayList<>();
 
-        if (nodeToTreatOrder <= 4) {
-            IGraph snapshot = copy.copy();
+        while (nodeToTreat != null
+                && getEffectiveOrder(nodeToTreat).size() <= 4
+                && copy.getNodes().size() > 5) {
+
             copy.delNode(nodeToTreat);
+            maskedNodes.add(nodeToTreat);
+            nodesOfDegreeFour.add(nodeToTreat);
+            nodeToTreat = getFirstNodeToTreat(copy);
+        }
 
-            p = fiveColoration(copy, p, getFirstNodeToTreat(copy));
+        if (copy.getNodes().size() <= 5) {
 
-            Color minimalCol = getMinimalColor(colorUsed, snapshot, nodeToTreat, p);
-            if (minimalCol == null) {
-                hue = (hue + GOLDEN_RATIO) % 1.0;
-                colToApply = nextColor(hue);
-                colorUsed.add(colToApply);
-            } else {
-                colToApply = minimalCol;
-            }
-            p.setNodeValue(nodeToTreat, colToApply);
-            return p;
+            WelshAndPowell WPColorAlgo = new WelshAndPowell();
+            p = WPColorAlgo.applyToExistingColorProperty(copy, p);
+                
+        } else {
 
-        } else { // order == 5
             ArrayList<INode> nonAdjacentNodes = getNonAdjacentNeighbors(nodeToTreat, copy);
             INode u = nonAdjacentNodes.get(0);
             INode v = nonAdjacentNodes.get(1);
 
-            IGraph snapshot = copy.copy(); 
             copy.delNode(nodeToTreat);
-
-            for (INode neighbor : new ArrayList<>(copy.getNeighbors(v))) {
+            maskedNodes.add(nodeToTreat);
+            for (INode neighbor : new ArrayList<>(getEffectiveOrder(v))) {
                 if (!neighbor.equals(u) && !copy.existEdge(u, neighbor, false)) {
                     copy.addEdge(u, neighbor);
                 }
             }
             copy.delNode(v);
-
-            p = fiveColoration(copy, p, u);
+            maskedNodes.add(v);
+            fiveColoration(getFirstNodeToTreat(copy), ogGraph);
             p.setNodeValue(v, p.getNodeValue(u));
+            assignMinimalColor(nodeToTreat, ogGraph);
 
-            Color minimalCol = getMinimalColor(colorUsed, snapshot, nodeToTreat, p);
-            if (minimalCol == null) {
-                hue = (hue + GOLDEN_RATIO) % 1.0;
-                colToApply = nextColor(hue);
-                colorUsed.add(colToApply);
-            } else {
-                colToApply = minimalCol;
-            }
-            p.setNodeValue(nodeToTreat, colToApply);
-            return p;
+        }
+
+        for (int i = nodesOfDegreeFour.size() - 1; i >= 0; i--) {
+            assignMinimalColor(nodesOfDegreeFour.get(i), ogGraph);
         }
     }
-    
-    private INode getFirstNodeToTreat(IGraph g){
-        boolean nodeFound = false;
-        int cpt = 0;
-        INode nodeToTreat = null;
-        while(!nodeFound && cpt < g.numberOfNodes()){
+
+    private INode getFirstNodeToTreat(IGraph g) {
+        for (int cpt = 0; cpt < g.numberOfNodes(); cpt++) {
             INode currentNode = g.getNodes().get(cpt);
-            if(g.getNeighbors(currentNode).size()<=5){
-                nodeToTreat = currentNode;
-                nodeFound = true;
-            }else{
-                cpt++;
+            if (g.getNeighbors(currentNode).size() <= 5
+                    && !maskedNodes.contains(currentNode)) {
+                return currentNode;
             }
         }
-        return nodeToTreat;
+        return null;
     }
-    
-    private ArrayList<INode> getNonAdjacentNeighbors(INode nodeToTreat, IGraph g){
+
+    private ArrayList<INode> getNonAdjacentNeighbors(INode nodeToTreat, IGraph g) {
         ArrayList<INode> res = new ArrayList<>();
+        ArrayList<INode> neighbors = getEffectiveOrder(nodeToTreat);
         boolean found = false;
         int i = 0;
-        int j = 0;
-        while(!found && i< g.getNeighbors(nodeToTreat).size()){
-            INode u = g.getNeighbors(nodeToTreat).get(i);
-            j=i+1;
-            while(!found && j<g.getNeighbors(nodeToTreat).size()){
-                INode v = g.getNeighbors(nodeToTreat).get(j);
-                if(!g.getNeighbors(u).contains(v)){
+
+        while (!found && i < neighbors.size()) {
+            INode u = neighbors.get(i);
+            int j = i + 1;
+
+            while (!found && j < neighbors.size()) {
+                INode v = neighbors.get(j);
+
+                if (!g.getNeighbors(u).contains(v)) {
                     res.add(u);
                     res.add(v);
                     found = true;
@@ -132,10 +140,26 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm{
         }
         return res;
     }
-    
+
+    private ArrayList<INode> getEffectiveOrder(INode n) {
+        ArrayList<IEdge> inOutEdges = copy.getInOutEdges(n);
+        ArrayList<INode> neighbors = new ArrayList<>();
+        int i = 0;
+
+        while (i < inOutEdges.size()) {
+            IEdge e = inOutEdges.get(i);
+            INode other = n.equals(e.source()) ? e.target() : e.source();
+
+            if (!maskedNodes.contains(other)) {
+                neighbors.add(other);
+            }
+            i++;
+        }
+        return neighbors;
+    }
+
     @Override
-    protected ArrayList<INode> buildNodeColorationOrder(IGraph g){
+    protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         throw new UnsupportedOperationException("This algorithm does not use this function.");
     }
-    
 }
