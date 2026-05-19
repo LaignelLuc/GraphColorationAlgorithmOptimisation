@@ -44,68 +44,78 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
         p = new ColorProperty();
         maskedNodes = new HashSet<>();
         colorUsed.add(hsvToColor((float) hue, 1.0f, 1.0f, 255));
-        fiveColoration(getFirstNodeToTreat(copy), g);
+        fiveColoration(getNodeToTreat(copy), g);
         return p;
     }
 
     /**
      * Computes the result of the five coloration algorithm for a given graph.
      *
-     * @param nodeToTreat
-     * @param ogGraph
+     * @param nodeToTreat the first node we treat
+     * @param ogGraph the original graph
      */
     private void fiveColoration(INode nodeToTreat, IGraph ogGraph) {
-
+        
+        // if the number of nodes in the graph is lower than 5 apply WelshAndPowell
+        // Base case
         if (copy.getNodes().size() <= 5) {
             WelshAndPowell WPColorAlgo = new WelshAndPowell();
             p = WPColorAlgo.applyToExistingColorProperty(copy, p);
             return;
         }
-
+        
         ArrayList<INode> nodesOfDegreeFour = new ArrayList<>();
-
+        //We put all the degree 4 nodes in a list
         while (nodeToTreat != null
-                && getEffectiveOrder(nodeToTreat).size() <= 4
+                && getNotDeletedNeighbors(nodeToTreat).size() <= 4
                 && copy.getNodes().size() > 5) {
 
-            copy.delNode(nodeToTreat);
+            copy.delNode(nodeToTreat); // We delete the degree 4 node from the copy of the graph 
             maskedNodes.add(nodeToTreat);
             nodesOfDegreeFour.add(nodeToTreat);
-            nodeToTreat = getFirstNodeToTreat(copy);
+            nodeToTreat = getNodeToTreat(copy); //We get the next nodeToTreat
         }
-
+        
+        //If the removal of nodes of degree 4 drops the count of node to 5 or under we can apply WelshAndPowell
         if (copy.getNodes().size() <= 5) {
 
             WelshAndPowell WPColorAlgo = new WelshAndPowell();
             p = WPColorAlgo.applyToExistingColorProperty(copy, p);
                 
-        } else {
+        } else { //Otherwise we treat the nodes of degree 5
 
             ArrayList<INode> nonAdjacentNodes = getNonAdjacentNeighbors(nodeToTreat, copy);
             INode u = nonAdjacentNodes.get(0);
             INode v = nonAdjacentNodes.get(1);
-
+            
+            //fusion of node v in u
             copy.delNode(nodeToTreat);
             maskedNodes.add(nodeToTreat);
-            for (INode neighbor : new ArrayList<>(getEffectiveOrder(v))) {
+            for (INode neighbor : new ArrayList<>(getNotDeletedNeighbors(v))) {
                 if (!neighbor.equals(u) && !copy.existEdge(u, neighbor, false)) {
                     copy.addEdge(u, neighbor);
                 }
             }
             copy.delNode(v);
             maskedNodes.add(v);
-            fiveColoration(getFirstNodeToTreat(copy), ogGraph);
+            fiveColoration(getNodeToTreat(copy), ogGraph);
             p.setNodeValue(v, p.getNodeValue(u));
             assignMinimalColor(nodeToTreat, ogGraph);
 
         }
-
+        
+        //we color all nodes of degree four
         for (int i = nodesOfDegreeFour.size() - 1; i >= 0; i--) {
             assignMinimalColor(nodesOfDegreeFour.get(i), ogGraph);
         }
     }
-
-    private INode getFirstNodeToTreat(IGraph g) {
+    
+    /**
+     * Gets the next node to treat in the graph.
+     * @param g the graph to treat
+     * @return the next node to treat
+     */
+    private INode getNodeToTreat(IGraph g) {
         for (int cpt = 0; cpt < g.numberOfNodes(); cpt++) {
             INode currentNode = g.getNodes().get(cpt);
             if (g.getNeighbors(currentNode).size() <= 5
@@ -115,10 +125,16 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
         }
         return null;
     }
-
+    
+    /**
+     * Gets the first two non adjacent Neighbors from a node.
+     * @param nodeToTreat the node to treat
+     * @param g the graph
+     * @return the two non adjacent Neighbors
+     */
     private ArrayList<INode> getNonAdjacentNeighbors(INode nodeToTreat, IGraph g) {
         ArrayList<INode> res = new ArrayList<>();
-        ArrayList<INode> neighbors = getEffectiveOrder(nodeToTreat);
+        ArrayList<INode> neighbors = getNotDeletedNeighbors(nodeToTreat);
         boolean found = false;
         int i = 0;
 
@@ -140,8 +156,13 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
         }
         return res;
     }
-
-    private ArrayList<INode> getEffectiveOrder(INode n) {
+    
+    /**
+     * Gets the neighbors list from a node without the deleted nodes from the graph (optimization).
+     * @param n the treated node.
+     * @return the list of neighbors
+     */
+    private ArrayList<INode> getNotDeletedNeighbors(INode n) {
         ArrayList<IEdge> inOutEdges = copy.getInOutEdges(n);
         ArrayList<INode> neighbors = new ArrayList<>();
         int i = 0;
@@ -157,7 +178,12 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
         }
         return neighbors;
     }
-
+    
+    /**
+     * This Algorithm does not use a deletion order.
+     * @param g graph treated
+     * @return nothing in this case.
+     */
     @Override
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         throw new UnsupportedOperationException("This algorithm does not use this function.");

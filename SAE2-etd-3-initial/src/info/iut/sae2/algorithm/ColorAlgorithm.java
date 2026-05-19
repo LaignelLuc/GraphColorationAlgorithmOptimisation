@@ -100,7 +100,7 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty> {
     }
 
     /**
-     * Returns the minimal color possible for a give Node.
+     * Returns the minimal color possible for a given Node.
      *
      * @param colorUsed array of all the color used in the graph
      * @param treatedGraph the treated graph
