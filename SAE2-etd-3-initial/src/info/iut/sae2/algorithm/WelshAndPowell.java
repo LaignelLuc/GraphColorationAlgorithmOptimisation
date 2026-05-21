@@ -39,13 +39,11 @@ public class WelshAndPowell extends ColorAlgorithm{
     @Override
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         // First we get the degrees for all node
-        HashMap <INode, Integer> degreesNodes = getDegree(g);
+        //HashMap <INode, Integer> degreesNodes = getDegree(g);
         
         // NewOrder
-        ArrayList<INode> newOrder = new ArrayList<>();
-        for (INode node : degreesNodes.keySet()){
-            newOrder.add(node);
-        }
+        ArrayList<INode> newOrder = g.getNodes();
+        
         //System.out.println(newOrder);
         
         // Then we change order
