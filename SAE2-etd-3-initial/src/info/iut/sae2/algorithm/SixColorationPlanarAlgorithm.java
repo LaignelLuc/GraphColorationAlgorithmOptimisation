@@ -34,6 +34,7 @@ public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
         return firstFit(order, g);
     }
 
+
     /**
      * Creates the coloration order for the SixColorationAlgorithm.
      *

@@ -1,6 +1,5 @@
 package info.iut.sae2.algorithm;
 
-import info.iut.sae2.graphs.Color;
 import info.iut.sae2.graphs.IEdge;
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
@@ -17,9 +16,7 @@ import java.util.Map;
  */
 public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
 
-    /**
-     * HashSet of deleted nodes to reduce complexity.
-     */
+    
     private HashSet<INode> maskedNodes = new HashSet<>();
 
     /**
@@ -47,6 +44,7 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
         fiveColoration(getNodeToTreat(copy), g);
         return p;
     }
+    
 
     /**
      * Computes the result of the five coloration algorithm for a given graph.

@@ -37,9 +37,12 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty> {
     /**
      * Returns the next distinct color using golden ratio hue stepping.
      *
-     * @param saturation
-     * @param value
-     * @param alpha
+     * @param hue angle around the central vertical axis
+     * @param saturation distance from the axis
+     * @param value distance along the axis
+     * @param alpha opacity   
+     * 
+     * @return a Color object
      */
     public static Color nextColor(float saturation, float value, int alpha, double hue) {
         return hsvToColor((float) hue, saturation, value, alpha);
@@ -47,6 +50,9 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty> {
 
     /**
      * Overload of nextColor with default values.
+     * 
+     * @param hue angle around the central vertical axis
+     * @return a Color object
      */
     public static Color nextColor(double hue) {
         return nextColor(0.75f, 0.95f, 255, hue);
@@ -54,6 +60,13 @@ abstract class ColorAlgorithm implements Algorithm<ColorProperty> {
 
     /**
      * Conversion of an HSV wheel color to an RGBA colour.
+     * 
+     * @param hue angle around the central vertical axis
+     * @param saturation distance from the axis
+     * @param value distance along the axis
+     * @param alpha opacity
+     * 
+     * @return a color in RGBA
      */
     public static Color hsvToColor(float hue, float saturation, float value, int alpha) {
         int sectorIndex = (int) (hue * 6); // sector index

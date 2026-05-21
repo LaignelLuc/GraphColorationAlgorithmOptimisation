@@ -19,6 +19,9 @@ import org.junit.Test;
  */
 public class WelshAndPowellTest {
     
+    /**
+     * Test getOrder function to get an ordered arrayList of nodes.
+    */
     @Test
     public void testGetOrder(){
         
@@ -39,6 +42,10 @@ public class WelshAndPowellTest {
         System.out.println(map);
     }
     
+    /**
+     * Test getDegree function to get an ordered 
+     * map of nodes with degrees.
+    */
     @Test
     public void testGetDegree(){
         
@@ -56,6 +63,9 @@ public class WelshAndPowellTest {
         System.out.println(newMap.keySet());
     }
     
+    /**
+     * Test Welsh and Powell Color algorithm on a test graph.
+    */
     @Test
     public void testWPColor(){
         // Get a new graph from files
