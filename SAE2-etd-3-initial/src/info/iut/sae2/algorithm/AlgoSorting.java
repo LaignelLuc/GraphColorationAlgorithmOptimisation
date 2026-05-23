@@ -20,8 +20,14 @@ public class AlgoSorting implements Algorithm {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    // Take an ArrayList of Integer and return it to 
-    // a decreasing order (Variant of selection sort)
+    
+    /**
+     * Method which takes an ArrayList of nodes in a graph and returns
+     * it to a decreasing order (Variant of selection sort).
+     * 
+     * @param g the graph
+     * @param nodes the ArrayList of nodes
+    */
     public static void getDecreasingOrder(IGraph g, ArrayList<INode> nodes){
         
         int indexI, indexMax, maxLocal;
@@ -56,10 +62,10 @@ public class AlgoSorting implements Algorithm {
     /**
      * Merge sort, restricted to an interval.
      *
-     * @param g
-     * @param nodes
-     * @param first
-     * @param last
+     * @param g a graph
+     * @param nodes ArrayList of nodes
+     * @param first The first element's index of the arrayList
+     * @param last The last element's index of the arrayList
      */
     public static void mergeSortPartial(IGraph g, ArrayList<INode> nodes, 
                                         int first, int last) {
@@ -76,11 +82,11 @@ public class AlgoSorting implements Algorithm {
     /**
      * Merging action of two sorted intervals.
      *
-     * @param g
-     * @param nodes
-     * @param first
-     * @param middle
-     * @param last
+     * @param g a graph
+     * @param nodes ArrayList of nodes
+     * @param first The first element's index of the arrayList
+     * @param middle The middle element's index of the arrayList
+     * @param last The last element's index of the arrayList
      */
     public static void fusion(IGraph g, ArrayList<INode> nodes,
                           int first, int middle, int last) {
@@ -135,15 +141,21 @@ public class AlgoSorting implements Algorithm {
     /**
      * Merge Sort.
      *
-     * @param g
-     * @param nodes
+     * @param g a graph
+     * @param nodes ArrayList of nodes
      */
     public static void mergeSort(IGraph g, ArrayList<INode> nodes) {
        mergeSortPartial(g, nodes, 0, nodes.size() - 1);
     }   
         
     
-    // Java Sort Collection
+    /**
+     * Method to sort an ArrayList of nodes in a graph with
+     * Java Sort Collection.
+     * 
+     * @param g the graph
+     * @param nodes the ArrayList of nodes
+    */
     public static void getDecreasingOrderJavaSort(IGraph g, 
                                                   ArrayList<INode> nodes) {
 

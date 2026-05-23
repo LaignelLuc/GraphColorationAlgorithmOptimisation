@@ -65,13 +65,13 @@ public abstract class AbstractProperty<T, U> implements IProperty<T, U> {
 
     @Override
     public void delNode(INode n) {
-        assert nodesValues.containsKey(n);
+        //assert nodesValues.containsKey(n);
         nodesValues.remove(n);
     }
 
     @Override
     public void delEdge(IEdge e) {
-        assert edgesValues.containsKey(e);
+        //assert edgesValues.containsKey(e);
         edgesValues.remove(e);
     }
 

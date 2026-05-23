@@ -15,7 +15,6 @@ import java.util.Map;
  *
  * @author jpmelisse
  */
-
 public class WelshAndPowell extends ColorAlgorithm{
     
     /**
@@ -30,22 +29,31 @@ public class WelshAndPowell extends ColorAlgorithm{
         return firstFit(order, g);
     }
     
+    /**
+     * Compute the result of the algorithm and returns it.
+     * @param g the graph on which the algorithm is applied
+     * @param p map of Colors (node, edge)
+     * @return the result of the algorithm
+    */
     public ColorProperty applyToExistingColorProperty(IGraph g, ColorProperty p){
         ArrayList<INode> order = buildNodeColorationOrder(g);
         return firstFit(order, g, p);
     }
     
-    // Method for rearrange nodes from highest degree to lowest degree
+     
+    /**
+     * Method for rearrange nodes from highest degree to lowest degree.
+     * @param g the graph
+     * @return An arrayList of nodes ordered by their degree
+    */
     @Override
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         // First we get the degrees for all node
-        HashMap <INode, Integer> degreesNodes = getDegree(g);
+        //HashMap <INode, Integer> degreesNodes = getDegree(g);
         
         // NewOrder
-        ArrayList<INode> newOrder = new ArrayList<>();
-        for (INode node : degreesNodes.keySet()){
-            newOrder.add(node);
-        }
+        ArrayList<INode> newOrder = g.getNodes();
+        
         //System.out.println(newOrder);
         
         // Then we change order
@@ -61,7 +69,12 @@ public class WelshAndPowell extends ColorAlgorithm{
         return newOrder;
     }
       
-    // Method to get degrees for all nodes
+  
+    /**
+     * Method to get degrees for all nodes from a graph.
+     * @param g the graph
+     * @return a map of nodes with their degree
+    */
     public static HashMap<INode, Integer> getDegree(IGraph g){
         
         HashMap <INode, Integer> newOrder = new HashMap<>();
@@ -73,7 +86,13 @@ public class WelshAndPowell extends ColorAlgorithm{
         return newOrder;
     }
     
-    // Methode to get degrees from an ArrayList
+    
+    /**
+     * Method to get degrees from an ordered ArrayList of nodes.
+     * @param g a graph
+     * @param nodes An arrayList of ordered nodes
+     * @return An arrayList of degrees
+    */
     public static ArrayList<Integer> getDegree(IGraph g,
             ArrayList<INode> nodes){
         ArrayList<Integer> newOrder = new ArrayList<>();
