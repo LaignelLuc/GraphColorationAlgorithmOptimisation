@@ -13,7 +13,7 @@ public class Size {
     /**
      * Width and height of the Size
      */
-    public double w, h;
+    private double w, h;
 
     /**
      * Default constructor

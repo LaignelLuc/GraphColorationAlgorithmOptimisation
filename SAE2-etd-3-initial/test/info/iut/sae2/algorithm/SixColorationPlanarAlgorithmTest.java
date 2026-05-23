@@ -55,4 +55,78 @@ public class SixColorationPlanarAlgorithmTest {
         Assert.assertTrue(colors.size() <= 6);
         System.out.println("Nombre de couleurs : "+colors.size());
     }
+    
+    /**
+     * Test Six Color algorithm on a large graph.
+     */
+    @Test
+    public void testSixColorBigGraph() {
+        // Get a new graph from files
+        String nodeFileName = "dataset/planar_grid_100_nodes.csv";
+        String edgeFileName = "dataset/planar_grid_100_edges.csv";
+        
+        IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
+        
+        // Apply Six Coloration algorithm
+        g.sixColors();
+        
+        // Verify that each node is colored different from their
+        // neighbors's colors (best to loop in edges)
+        for (IEdge e : g.getEdges()){
+            // Get source node and color
+            INode n1 = e.source();
+            Color c1 = g.getNodeColor(n1);
+            // Get target node and color
+            INode n2 = e.target();
+            Color c2 = g.getNodeColor(n2);
+            Assert.assertFalse(c1.equals(c2));    
+        }
+        
+        // Six coloration algorithm can color a graph up to six colors max.
+        HashSet<Color> colors = new HashSet<>();
+        for (INode n : g.getNodes()){
+            colors.add(g.getNodeColor(n));
+        }
+        
+        // Verify if colors <= 6
+        Assert.assertTrue(colors.size() <= 6);
+        System.out.println("Nombre de couleurs : "+colors.size());
+    }
+    
+    /**
+     * Test Six Color algorithm on a large planar graph.
+     */
+    @Test
+    public void testSixColorBigPlanar() {
+        // Get a new graph from files
+        String nodeFileName = "dataset/planar_2000_nodes.csv";
+        String edgeFileName = "dataset/planar_2000_edges.csv";
+        
+        IGraph g = GraphLoader.loadFromFile(nodeFileName, edgeFileName);
+        
+        // Apply Six Coloration algorithm
+        g.sixColors();
+        
+        // Verify that each node is colored different from their
+        // neighbors's colors (best to loop in edges)
+        for (IEdge e : g.getEdges()){
+            // Get source node and color
+            INode n1 = e.source();
+            Color c1 = g.getNodeColor(n1);
+            // Get target node and color
+            INode n2 = e.target();
+            Color c2 = g.getNodeColor(n2);
+            Assert.assertFalse(c1.equals(c2));    
+        }
+        
+        // Six coloration algorithm can color a graph up to six colors max.
+        HashSet<Color> colors = new HashSet<>();
+        for (INode n : g.getNodes()){
+            colors.add(g.getNodeColor(n));
+        }
+        
+        // Verify if colors <= 6
+        Assert.assertTrue(colors.size() <= 6);
+        System.out.println("Nombre de couleurs : "+colors.size());
+    }
 }

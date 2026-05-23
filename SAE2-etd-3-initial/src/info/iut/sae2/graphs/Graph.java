@@ -12,8 +12,6 @@ import info.iut.sae2.properties.LayoutProperty;
 import info.iut.sae2.properties.SizeProperty;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -740,7 +738,7 @@ public class Graph implements IGraph {
     }
 
     /**
-     * Color the nodes with Well & Powell algorithm.
+     * Color the nodes with Welsh & Powell algorithm.
      */
     @Override
     public void welshAndPowell() {
