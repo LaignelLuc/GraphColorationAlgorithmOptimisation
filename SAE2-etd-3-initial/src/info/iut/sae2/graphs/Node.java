@@ -5,11 +5,9 @@
 package info.iut.sae2.graphs;
 
 /**
- *
+ * Implementation of INode to create a node object.
  * @author llaignel
  */
 public class Node implements INode{
     
-    public Node(){
-    } 
 }

@@ -7,18 +7,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * SixColoration Algorithm class.
+ * SixColoration Algorithm class for the coloration of graphs.
  *
  * @author llaignel
  */
 public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
-
-    /**
-     * Empty constructor.
-     */
-    public SixColorationPlanarAlgorithm() {
-
-    }
 
     /**
      * Compute the result of the Six Coloration algorithm and returns it.

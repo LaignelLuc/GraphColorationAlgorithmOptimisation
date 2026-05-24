@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- *
+ * Implementation of algorithm abstract class for sorting algorithms.
  * @author jpmelisse
  */
 public class AlgoSorting implements Algorithm {

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
+ * Graph class that implements IGraph abstract class.
  * @author llaignel
  */
 public class Graph implements IGraph {
@@ -29,10 +29,19 @@ public class Graph implements IGraph {
      */
     private ArrayList<INode> nodes;
     
+    /**
+     * Set of the sizes contained by the graph.
+     */
     private SizeProperty sizes;
     
+    /**
+     * Set of the colors contained by the graph.
+     */
     private ColorProperty colors;
     
+    /**
+     * Set of coordinates of the nodes contained by the graph which creates the layout.
+     */
     private LayoutProperty layout;
 
     /**
