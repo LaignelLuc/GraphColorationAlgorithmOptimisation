@@ -22,7 +22,7 @@ public class Main {
         // Apply a look'n feel
         UIManager.setLookAndFeel(new NimbusLookAndFeel());
 
-        GraphViewer myWindow = new GraphViewer("Graph viewer : MELISSE Jea-Paul "
+        GraphViewer myWindow = new GraphViewer("Graph viewer : MELISSE Jean-Paul "
                 + "and LAIGNEL Luc");
         myWindow.setVisible(true);
     }
