@@ -3,7 +3,11 @@ package info.iut.sae2.algorithm;
 import info.iut.sae2.graphs.IGraph;
 import info.iut.sae2.graphs.INode;
 import info.iut.sae2.properties.ColorProperty;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,22 +42,36 @@ public class SixColorationPlanarAlgorithm extends ColorAlgorithm {
     protected ArrayList<INode> buildNodeColorationOrder(IGraph g) {
         IGraph copy = g.copy();
         ArrayList<INode> delOrder = new ArrayList<>();
-
-        while (!copy.getNodes().isEmpty()) {
-            int cpt = 0;
-            boolean found = false;
-            while (cpt < copy.getNodes().size() && !found) {
-                INode node = copy.getNodes().get(cpt);
-                if (copy.getNeighbors(node).size() <= 5) {
-                    delOrder.add(node);
-                    copy.delNode(node);
-                    found = true;
-                } else {
-                    cpt++;
-                }
+        
+        HashMap<INode, Integer> degreesOfNodes = new HashMap<>(); //This HashMap contains the degrees if each node we treat
+        Deque<INode> nodesOfDegreeFive = new ArrayDeque<>();
+        
+        //We first build the stack of nodes that have a degree lower or equal to 5
+        for (INode node : copy.getNodes()) {
+            int deg = copy.getNeighbors(node).size();
+            degreesOfNodes.put(node, deg);
+            if (deg <= 5){
+                nodesOfDegreeFive.push(node);
             }
         }
-        java.util.Collections.reverse(delOrder);
+        
+        while (!nodesOfDegreeFive.isEmpty()) { 
+            INode node = nodesOfDegreeFive.pop();
+            if (copy.getNodes().contains(node)){ //If we didn't already delete the node 
+                delOrder.add(node); //add the node into the order 
+                for (INode neighbor : copy.getNeighbors(node)) { //for each neighbors of the node
+                    int newDegree = degreesOfNodes.get(neighbor) - 1; //their new degree is going to be one lower because 
+                    //we deleted one of its neighbors(the one at the top of the stack)
+                    degreesOfNodes.put(neighbor, newDegree);
+                    if (newDegree == 5){ //if the neighbor has a new degree of 5 or lower he is elligible to be put into the treatment stack
+                        nodesOfDegreeFive.push(neighbor);
+                    }
+                }
+                copy.delNode(node); //finally we actually delete the node from the copy of the graph
+            }
+        }
+
+        Collections.reverse(delOrder); //since for 6-coloration we treat nodes in the reverse order of their deletion
         return delOrder;
     }
 }
