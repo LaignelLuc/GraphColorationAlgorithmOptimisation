@@ -153,14 +153,16 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
      * @return the next node to treat
      */
     private INode getNodeToTreat(IGraph g) {
-        for (int cpt = 0; cpt < g.numberOfNodes(); cpt++) {
+        INode result = null;
+        int cpt = 0;
+        while (cpt < g.numberOfNodes() && result == null) {
             INode currentNode = g.getNodes().get(cpt);
-            if (g.getNeighbors(currentNode).size() <= 5
-                    && !maskedNodes.contains(currentNode)) {
-                return currentNode;
+            if (g.getNeighbors(currentNode).size() <= 5 && !maskedNodes.contains(currentNode)) {
+                result = currentNode;
             }
+            cpt++;
         }
-        return null;
+        return result;
     }
 
     /**
@@ -245,11 +247,15 @@ public class FiveColorationPlanarAlgorithm extends ColorAlgorithm {
             }
         }
 
-        for (Color c : colorUsed) {
+        int i = 0;
+        boolean found = false;
+        while (i < colorUsed.size() && !found) {
+            Color c = colorUsed.get(i);
             if (!neighborColors.contains(c)) {
                 p.setNodeValue(node, c);
-                return;
+                found = true;
             }
+            i++;
         }
     }
 
