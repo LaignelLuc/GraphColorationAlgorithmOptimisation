@@ -20,7 +20,9 @@ import org.junit.Test;
  */
 public class GraphTest {
     
-    // Test number Of Nodes
+    /**
+     * Test number Of Nodes
+     */
     @Test
     public void testNumberOfNodes(){
         String nodeFileName = "dataset/simple_nodes.csv";
@@ -31,8 +33,10 @@ public class GraphTest {
         // Check number of nodes
         Assert.assertEquals(12, g.numberOfNodes());
     }
-    
-    // Test number of Edges
+     
+    /**
+     * Test number of Edges
+    */
     @Test
     public void testNumberOfEdges(){
         String nodeFileName = "dataset/simple_nodes.csv";
@@ -44,7 +48,9 @@ public class GraphTest {
         Assert.assertEquals(16, g.numberOfEdges());
     }
     
-    // Test some functions on nodes
+    /**
+     * Test some functions on nodes
+    */
     @Test
     public void testBasicFunctionsOnNodes(){
         // New Graph
@@ -77,7 +83,9 @@ public class GraphTest {
         Assert.assertEquals(2, g.numberOfNodes());
     }
     
-    // Test some functions on edges
+    /**
+     * Test some functions on edges
+    */
     @Test
     public void testBasicFuntionsOnEdges(){
         // New Graph
@@ -125,8 +133,10 @@ public class GraphTest {
         // 1 edge left
         Assert.assertEquals(1, g.numberOfEdges());
     }
-    
-    // Test some functions about the edges of a node
+     
+    /**
+     * Test some functions about the edges of a node
+    */
     @Test
     public void testGetNodeEdges(){
         // New graph
@@ -154,7 +164,9 @@ public class GraphTest {
         Assert.assertEquals(3, inOutEdges.size());
     }
     
-    // Test some functions about the nodes from an edge
+    /**
+     * Test some functions about the nodes from an edge
+    */
     @Test
     public void testGetNodesfromEdge(){
         // New graph
@@ -188,8 +200,10 @@ public class GraphTest {
         Assert.assertFalse(n4.equals(e10.target()));
         
     }
-    
-    // Test some functions about the neighbors of a node
+     
+    /**
+     * Test some functions about the neighbors of a node
+    */
     @Test
     public void testGetNodeNeighbors(){
         // New graph
@@ -257,8 +271,10 @@ public class GraphTest {
         Assert.assertFalse(n8.equals(neighborsN5.get(1)));
         Assert.assertFalse(n8.equals(neighborsN5.get(2)));
     }
-    
-    // Test some functions to get degrees of a node
+     
+    /**
+     * Test some functions to get degrees of a node
+    */
     @Test
     public void testGetAllDegreeNode(){
         // New graph
